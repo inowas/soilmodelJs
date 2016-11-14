@@ -1,6 +1,6 @@
 (function(){
   var Surface=function(node){
-    var heightFunction,colorFunction,timer,timer,transformPrecalc=[];
+    var heightFunction,colorFunction,timer,transformPrecalc=[];
     var displayWidth=300, displayHeight=300, zoom=1;
     var trans;
 
@@ -137,4 +137,4 @@
     this.transition=surface.transition.bind(surface);
     return this;
   };            
-})(); 
+})();
