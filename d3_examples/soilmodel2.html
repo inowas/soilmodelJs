@@ -10,7 +10,7 @@
     svg path{
       stroke: #000;
       stroke-width: 1px;
-      stroke: rgba(0,0,0,0.2);
+      stroke: rgba(0,0,0,0.1);
     }
     svg{
       border: 1px solid #DED8BF;
@@ -71,11 +71,11 @@
   function resolution(dataset, alter) {
     var output=[];
     var xlength = dataset.length;
-    var x_add= (xlength-(xlength%30))/30;
+    var x_add= (xlength-(xlength%30))/10;
       for (var x= 0;x<xlength; x=x+x_add){
       var fo=[];
       var ylength = dataset[0].length;
-       var y_add= (ylength-(ylength%30))/30;
+       var y_add= (ylength-(ylength%30))/10;
        output.push(fo);
       for (var y= 0; y<ylength;y=y+y_add){
         var f1= dataset[x];
@@ -117,8 +117,7 @@
             var c=d3.hsl((d+100), 0.6, 0.5).rgb();
             return "rgb("+parseInt(c.r)+","+parseInt(c.g)+","+parseInt(c.b)+")";
           });
-
-  ul.selectAll('li')
+    ul.selectAll('li')
           .data(surfaces)
           .enter().append('li')
           .html(function(d){

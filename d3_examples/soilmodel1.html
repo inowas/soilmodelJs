@@ -54,13 +54,26 @@
 <script src="data/data2D.js"></script>
 <script>
   var yaw=0.5,pitch=0.5, width=700, height=400, drag=false;
+
+  function resolution() {
+    var output=[];
+    for (var x= 1;x<data2.length; x=x+2){
+      var fo=[];
+      output.push(fo);
+      for (var y= 1; y<data2[x].length;y=y+2){
+        var f1= data2[x];
+        fo.push(f1[y]);
+      }
+    }
+    return output;
+  }
   var surfaces=[
     {
-      name: 'Hanoi model',
-      data: data2
+      name: 'Sample dataset',
+      data: resolution()
     }
-  ];
- // var selected=surfaces[0];
+    ];
+  var selected=surfaces[0];
 
   var ul=d3.select('body')
       .append('ul');
