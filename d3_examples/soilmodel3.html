@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body{
+      font-family: sans;
+      padding: 10px;
+    }
+    svg path{
+      stroke: #000;
+      stroke-width: 1px;
+      stroke: rgba(0,0,0,0.1);
+    }
+    svg{
+      float : left;
+      border: 1px solid #DED8BF;
+      background-color: #f4f4d9;
+      width: 700px;
+      height: 400px;
+    }
+    h1{
+      font-weight: normal;
+      margin: 10px;
+      padding-left: 5px;
+      color: #53483e;
+    }
+    p{
+      margin: 10px;
+      margin-bottom: 10px;
+      padding-left: 5px;
+      color: #917e6b;
+    }
+    ul{
+      width: 250px;
+      float: left;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      padding-right: 10px;
+    }
+    nav{
+      width: 250px;
+      float: left;
+      margin: 0;
+      padding: 0;
+      padding-right: 10px;
+    }
+
+    #legend-svg{
+        float: left;
+        width: 25px;
+        height: 400px;
+    }
+    li{
+      cursor: pointer;
+      background-color: #c8ad93;
+      padding: 10px;
+      margin: 2px;
+      color: #fff;
+    }
+  </style>
+  <!--<link href="js/checkbox.css" rel="stylesheet" type="text/css">-->
+</head>
+<body>
+<h1>Soil Models</h1>
+<!--<nav>
+    <h1>Choose layers</h1>
+    <div class="roundedOne">
+        <label><input type="checkbox" id="myCheckbox1"><span>First layer</span></label>
+    </div>
+    <div class="roundedOne">
+        <label><input type="checkbox" id="myCheckbox2"></label>Layer two
+    </div>
+    <div class="roundedOne">
+        <label><input type="checkbox" id="myCheckbox3"></label> Layer three<br>
+    </div>
+  <input name="updateButton"
+         type="button"
+         value="Update"
+         onclick="updateData()" />
+</nav>-->
+<nav>
+    <p>Choose layers</p>
+    <input type="checkbox" id="myCheckbox1">First layer<br>
+    <input type="checkbox" id="myCheckbox2">Layer two<br>
+    <input type="checkbox" id="myCheckbox3">Layer three<br>
+
+    <p>Resolution reduction by</p>
+    <input type="checkbox" id="gridValue"> Grid Value (Default)<br>
+    <input type="checkbox" id="meandata"> Mean Value<br>
+    <input type="checkbox" id="highestValue"> Highest Value<br>
+    <p></p>
+    <input name="updateButton"
+           type="button"
+           value="Update"
+           onclick="updateData()" />
+
+</nav>
+<div>
+    <svg id="legend-svg"></svg>
+</div>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="surface3d.js"></script>
+<script src="data/data2D.js"></script>
+<script src="js/resolution.js"></script>
+<script src="js/legends.js"></script>
+<script>
+  var yaw=0.5,pitch=0.5, width=700, height=400, drag=false;
+
+  var surfaces=[
+    {
+      name: 'Model_data*1',
+      data: resolution(data2, 10, "mean")
+    },
+    {
+      name: 'Model_ data*2',
+      data: resolution(data2, 20, "highest")
+    },
+    {
+      name: 'Model_data*3',
+      data: resolution(data2, 30)
+    }
+  ];
+  var selected=surfaces[0];
+
+  var ul=d3.select('body')
+          .append('ul');
+  var svg=d3.select('body')
+          .append('svg')
+          .attr('height',height)
+          .attr('width',width);
+
+  var group = svg.append("g");
+  var md=group.data([surfaces[0].data])
+          .surface3D(width,height)
+          .surfaceHeight(function(d){
+            return d;
+          }).surfaceColor(function(d){
+            var c=d3.hsl((d+100), 0.6, 0.5).rgb();
+            return "rgb("+parseInt(c.r)+","+parseInt(c.g)+","+parseInt(c.b)+")";
+          });
+  function updateData(){
+      md.selectAll("*").remove();
+      if(d3.select("#myCheckbox1").property("checked")) {
+          var dd1 = md.append('svg').data([surfaces[0].data])
+                  .surface3D(width, height)
+                  .transition().duration(500)
+                  .surfaceHeight(function (d) {
+                      return d;
+                  }).surfaceColor(function (d) {
+              var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
+              return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+          });
+      }
+      if(d3.select("#myCheckbox2").property("checked")) {
+          md.append('svg').data([surfaces[1].data])
+                  .surface3D(width, height)
+                  .transition().duration(500)
+                  .surfaceHeight(function (d) {
+                      return d;
+                  }).surfaceColor(function (d) {
+              var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
+              return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+          });
+      }
+      if(d3.select("#myCheckbox3").property("checked")) {
+          md.append('svg').data([surfaces[2].data])
+                  .surface3D(width, height)
+                  .transition().duration(500)
+                  .surfaceHeight(function (d) {
+                      return d;
+                  }).surfaceColor(function (d) {
+              var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
+              return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+          });
+      }
+  }
+
+  svg.selectAll("*").on("mousedown",function(){
+      console.log(this)
+    drag=[d3.mouse(this),yaw,pitch];
+  }).on("mouseup",function(){
+    drag=false;
+  }).on("mousemove",function(){
+    if(drag){
+      var mouse=d3.mouse(this);
+      yaw=drag[1]-(mouse[0]-drag[0][0])/50;
+      pitch=drag[2]+(mouse[1]-drag[0][1])/50;
+      pitch=Math.max(-Math.PI/2,Math.min(Math.PI/2,pitch));
+      md.turntable(yaw,pitch);
+    }
+  });
+</script>
+</body>
+</html>
