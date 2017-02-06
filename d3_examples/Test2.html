@@ -9,23 +9,23 @@
 function dataFromFormular(formula){
     var output=[];
     for(var x=-1;x<1;x++){
-      var f0=[];
-      output.push(f0);
+     var fo = [];
+        output.push(fo);
       for(var y=-1;y<1;y++){
-          f0.push(formula(x,y));
+          fo.push(formula(x,y));
       }
     }
+
+    console.log(output);
     return output;
-  }
+}
 document.getElementById("demo").innerHTML = dataFromFormular(function(x,y){
           return Math.sin(Math.sqrt(x*x+y*y)/5*Math.PI)*50;
         });
 
-d3.csv
-
-function datafromCSV(){
+/*function datafromCSV(){
 var datao = [];
-d3.csv(" cities.csv", function(d) {
+d3.csv("data/cities.csv", function(d) {
   return {
     city : d.city,
     state : d.state,
@@ -37,7 +37,7 @@ d3.csv(" cities.csv", function(d) {
 });
 return datao;
 }
-document.getElementById("demo").innerHTML = datafromCSV();
+document.getElementById("demo").innerHTML = datafromCSV();*/
 
 </script>
 

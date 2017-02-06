@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body{
+            font-family: sans;
+            padding: 10px;
+        }
+        svg path{
+            stroke: #000;
+            stroke-width: 1px;
+            stroke: rgba(0,0,0,0.1);
+        }
+        svg{
+            border: 1px solid #DED8BF;
+            background-color: #f4f4d9;
+            width: 700px;
+            height: 400px;
+        }
+        h1{
+            font-weight: normal;
+            margin: 0;
+            padding-left: 5px;
+            color: #53483e;
+        }
+        p{
+            margin: 0;
+            margin-bottom: 10px;
+            padding-left: 5px;
+            color: #917e6b;
+        }
+        ul{
+            width: 200px;
+            float: left;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            padding-right: 10px;
+        }
+        li{
+            cursor: pointer;
+            background-color: #c8ad93;
+            padding: 10px;
+            margin: 2px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<!-- Squared TWO -->
+
+<h1>D3.js Surface Plots</h1>
+<p>Drag graph to change view</p>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="functions.js"></script>
+<script src="../js/rainbowvis.js"></script>
+<script src="../data/data2D.js"></script>
+
+<input type="checkbox" id="myCheckbox1"> Layer one<br>
+<input type="checkbox" id="myCheckbox2"> Layer two<br>
+<input type="checkbox" id="myCheckbox3"> Layer three<br>
+<div id="option">
+    <input name="updateButton"
+           type="button"
+           value="Update"
+           onclick="updateData()" />
+</div>
+
+<script>
+    var yaw=0.5,pitch=0.5, width=700, height=400, drag=false;
+    var dataset1 = [ 5, 10, 15, 20, 25 ];
+    function resolution(dataset, alter) {
+        var output=[];
+        var xlength = dataset.length;
+        var x_add= (xlength-(xlength%30))/10;
+        for (var x= 0;x<xlength; x=x+x_add){
+            var fo=[];
+            var ylength = dataset[0].length;
+            var y_add= (ylength-(ylength%30))/10;
+            output.push(fo);
+            for (var y= 0; y<ylength;y=y+y_add){
+                var f1= dataset[x];
+                for (var i = y; i<=y+y_add; i=i+1){
+                    var val = val + f1[i];
+                }
+               // console.log(val, f1[y]);
+                f1[y]=f1[y]||0;
+                //console.log(val, f1[y]);
+                fo.push(-f1[y]+alter);
+            }
+        }
+        return output;
+    }
+
+    var surfaces=[
+        {
+            name: 'Model_data*1',
+            data: resolution(data2, 10)
+        },
+        {
+            name: 'Model_ data*2',
+            data: resolution(data2, 20)
+        },
+        {
+            name: 'Model_data*3',
+            data: resolution(data2, 30)
+        }
+    ];
+
+    //    d3.select("body").selectAll("p").data(dataset1)
+//        .enter().append("p").text(hello());
+    var ul=d3.select('body')
+            .append('ul');
+    var svg=d3.select('body')
+            .append('svg')
+            .attr('height',height)
+            .attr('width',width);
+    numbers = [1,2,3,4,5,6]
+    var max = Math.max(... numbers);
+
+    console.log(max);
+    var rainbow = new Rainbow(); // by default, range is 0 to 100
+
+    var group = svg.append("g");
+    var md=group.data([surfaces[0].data])
+            .surface3D(width,height)
+            .surfaceHeight(function(d){
+                return d;
+            }).surfaceColor(function(d){
+                var hex = '#' + rainbow.colourAt((d-10)*4);
+                return hex;
+                //var c=d3.hsl((d+100), 0.6, 0.5).rgb();
+                //return "rgb("+parseInt(c.r)+","+parseInt(c.g)+","+parseInt(c.b)+")";
+            });
+    /*ul.selectAll('li')
+            .data(surfaces)
+            .enter().append('li')
+            .html(function(d){
+                return d.name
+            }).on('mousedown',function(){
+        md.append('svg').data([d3.select(this).datum().data])
+                .surface3D(width,height)
+                .transition().duration(500)
+                .surfaceHeight(function(d){
+                    return d;
+                }).surfaceColor(function(d){
+            var c=d3.hsl((d+100), 0.6, 0.5).rgb();
+            return "rgb("+parseInt(c.r)+","+parseInt(c.g)+","+parseInt(c.b)+")";
+        });
+    });*/
+    /*d3.select("#myCheckbox2").on("change",function(){
+        if(d3.select("#myCheckbox2").property("checked")) {
+            md.append('svg').data([surfaces[1].data])
+                    .surface3D(width, height)
+                    .transition().duration(500)
+                    .surfaceHeight(function (d) {
+                        return d;
+                    }).surfaceColor(function (d) {
+                var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
+                return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+            });
+        } else{
+            md.append('svg')
+        }
+    });*/
+/*    function updateData(){
+        //d3.select('svg').remove();
+        md.selectAll("*").remove();
+        if(d3.select("#myCheckbox1").property("checked")) {
+            md.append('svg').data([surfaces[0].data])
+                    .surface3D(width, height)
+                    .transition().duration(500)
+                    .surfaceHeight(function (d) {
+                        return d;
+                    }).surfaceColor(function (d) {
+                var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
+                return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+            });
+        }
+        if(d3.select("#myCheckbox2").property("checked")) {
+            md.append('svg').data([surfaces[1].data])
+                    .surface3D(width, height)
+                    .transition().duration(500)
+                    .surfaceHeight(function (d) {
+                        return d;
+                    }).surfaceColor(function (d) {
+                var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
+                return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+            });
+        }
+        if(d3.select("#myCheckbox3").property("checked")) {
+            md.append('svg').data([surfaces[2].data])
+                    .surface3D(width, height)
+                    .transition().duration(500)
+                    .surfaceHeight(function (d) {
+                        return d;
+                    }).surfaceColor(function (d) {
+                var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
+                return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+            });
+        }
+    }*/
+</script>
+</body>
+</html>

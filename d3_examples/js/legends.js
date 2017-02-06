@@ -1,4 +1,3 @@
-
 var legendFullHeight = 440;
 var legendFullWidth = 65;
 
@@ -8,6 +7,7 @@ var legendMargin = { top: 20, bottom: 20, left: 5, right: 20 };
 var legendWidth = legendFullWidth - legendMargin.left - legendMargin.right;
 var legendHeight = legendFullHeight - legendMargin.top - legendMargin.bottom;
 
+/*
 var legendSvg = d3.select('#legend-svg')
     .attr('width', legendFullWidth)
     .attr('height', legendFullHeight)
@@ -17,11 +17,21 @@ var legendSvg = d3.select('#legend-svg')
     .attr('width', legendWidth)
     .attr('height', legendHeight)
     .style('fill', '#7f3b08');
+*/
+var legendSvg = d3.select('#legend-svg')
+    .attr('width', legendFullWidth)
+    .attr('height', legendFullHeight)
+    .append('g')
+    .attr('transform', 'translate(' + legendMargin.left + ',' +
+        legendMargin.top + ')');
+
+//updateColourScale(scales['puOr11']);
+//console.log(scales['puOr11']);
 
 function updateColourScale(scale) {
     // create colour scale
     var colorScale = d3.scale.linear()
-        .domain(linspace(-3, 3, scale.length))
+        .domain(linspace(10, 30, scale.length))
         .range(scale);
 
     // append gradient bar
@@ -59,7 +69,7 @@ function updateColourScale(scale) {
 
     // create a scale and axis for the legend
     var legendScale = d3.scale.linear()
-        .domain([-3, 3])
+        .domain([10,30])
         .range([legendHeight, 0]);
 
     var legendAxis = d3.svg.axis()

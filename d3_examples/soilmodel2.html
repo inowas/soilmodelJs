@@ -79,7 +79,7 @@
        output.push(fo);
       for (var y= 0; y<ylength;y=y+y_add){
         var f1= dataset[x];
-        fo.push(-f1[y]*alter);
+        fo.push(-f1[y]+alter);
       }
     }
     return output;
@@ -88,15 +88,15 @@
   var surfaces=[
     {
       name: 'Model_data*1',
-      data: resolution(data2, 1)
+      data: resolution(data2, 10)
     },
     {
-      name: 'Model_data*2',
-      data: resolution(data2, 2)
+      name: 'Model_ data*2',
+      data: resolution(data2, 20)
     },
     {
       name: 'Model_data*3',
-      data: resolution(data2, 3)
+      data: resolution(data2, 30)
     }
   ];
   var selected=surfaces[0];
@@ -123,7 +123,8 @@
           .html(function(d){
             return d.name
           }).on('mousedown',function(){
-    md.data([d3.select(this).datum().data]).surface3D()
+    md.append('svg').data([d3.select(this).datum().data])
+            .surface3D(width,height)
             .transition().duration(500)
             .surfaceHeight(function(d){
               return d;

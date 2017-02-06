@@ -105,9 +105,12 @@
 <script src="surface3d.js"></script>
 <script src="data/data2D.js"></script>
 <script src="js/resolution.js"></script>
+<script src="js/rainbowvis.js"></script>
 <script src="js/legends.js"></script>
+<script src="js/scales.js"></script>
 <script>
   var yaw=0.5,pitch=0.5, width=700, height=400, drag=false;
+  updateColourScale(scales['rainbowvis']);
 
   var surfaces=[
     {
@@ -124,6 +127,7 @@
     }
   ];
   var selected=surfaces[0];
+  var rainbow = new Rainbow(); // by default, range is 0 to 100
 
   var ul=d3.select('body')
           .append('ul');
@@ -138,8 +142,8 @@
           .surfaceHeight(function(d){
             return d;
           }).surfaceColor(function(d){
-            var c=d3.hsl((d+100), 0.6, 0.5).rgb();
-            return "rgb("+parseInt(c.r)+","+parseInt(c.g)+","+parseInt(c.b)+")";
+              var hex = '#' + rainbow.colourAt((d-10)*4);
+              return hex;
           });
   function updateData(){
       md.selectAll("*").remove();
@@ -150,8 +154,8 @@
                   .surfaceHeight(function (d) {
                       return d;
                   }).surfaceColor(function (d) {
-              var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
-              return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+                      var hex = '#' + rainbow.colourAt((d-10)*4);
+                      return hex;
           });
       }
       if(d3.select("#myCheckbox2").property("checked")) {
@@ -161,8 +165,8 @@
                   .surfaceHeight(function (d) {
                       return d;
                   }).surfaceColor(function (d) {
-              var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
-              return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+              var hex = '#' + rainbow.colourAt((d-10)*4);
+              return hex;
           });
       }
       if(d3.select("#myCheckbox3").property("checked")) {
@@ -172,8 +176,8 @@
                   .surfaceHeight(function (d) {
                       return d;
                   }).surfaceColor(function (d) {
-              var c = d3.hsl((d + 100), 0.6, 0.5).rgb();
-              return "rgb(" + parseInt(c.r) + "," + parseInt(c.g) + "," + parseInt(c.b) + ")";
+              var hex = '#' + rainbow.colourAt((d-10)*4);
+              return hex;
           });
       }
   }
