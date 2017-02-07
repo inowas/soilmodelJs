@@ -115,11 +115,11 @@
   var surfaces=[
     {
       name: 'Model_data*1',
-      data: resolution(data2, 10, "mean")
+      data: resolution(data2, 10)
     },
     {
       name: 'Model_ data*2',
-      data: resolution(data2, 20, "highest")
+      data: resolution(data2, 20)
     },
     {
       name: 'Model_data*3',
@@ -137,7 +137,7 @@
           .attr('width',width);
 
   var group = svg.append("g");
-  var md=group.data([surfaces[0].data])
+ /* var md=group.data([surfaces[0].data])
           .surface3D(width,height)
           .surfaceHeight(function(d){
             return d;
@@ -145,10 +145,54 @@
               var hex = '#' + rainbow.colourAt((d-10)*4);
               return hex;
           });
+*/
+ function getdata() {
+     if(d3.select("#myCheckbox1").property("checked")) {
+         if(d3.select("#meandata").property("checked")) {
+             return resolution(data2,10,"mean");
+         }
+         if(d3.select("#highestValue").property("checked")) {
+             return resolution(data2,10,"highest");
+         }
+         if(d3.select("#gridValue").property("checked")) {
+             return resolution(data2,10);
+         }
+     }
+     if(d3.select("#myCheckbox2").property("checked")) {
+         if(d3.select("#meandata").property("checked")) {
+             return resolution(data2,20,"mean");
+         }
+         if(d3.select("#highestValue").property("checked")) {
+             return resolution(data2,20,"highest");
+         }
+         if(d3.select("#gridValue").property("checked")) {
+             return resolution(data2,20);
+         }
+     }
+     if(d3.select("#myCheckbox3").property("checked")) {
+         if(d3.select("#meandata").property("checked")) {
+             return resolution(data2,30,"mean");
+         }
+         if(d3.select("#highestValue").property("checked")) {
+             return resolution(data2,30,"highest");
+         }
+         if(d3.select("#gridValue").property("checked")) {
+             return resolution(data2,30);
+         }
+     }
+ }
+  var md=group.data([surfaces[0].data])
+          .surface3D(width,height)
+          .surfaceHeight(function(d){
+              return d;
+          }).surfaceColor(function(d){
+              var hex = '#' + rainbow.colourAt((d-10)*4);
+              return hex;
+          });
   function updateData(){
       md.selectAll("*").remove();
       if(d3.select("#myCheckbox1").property("checked")) {
-          var dd1 = md.append('svg').data([surfaces[0].data])
+          var dd1 = md.append('svg').data([getdata()])
                   .surface3D(width, height)
                   .transition().duration(500)
                   .surfaceHeight(function (d) {
@@ -159,7 +203,7 @@
           });
       }
       if(d3.select("#myCheckbox2").property("checked")) {
-          md.append('svg').data([surfaces[1].data])
+          md.append('svg').data([getdata()])
                   .surface3D(width, height)
                   .transition().duration(500)
                   .surfaceHeight(function (d) {
@@ -170,7 +214,7 @@
           });
       }
       if(d3.select("#myCheckbox3").property("checked")) {
-          md.append('svg').data([surfaces[2].data])
+          md.append('svg').data([getdata()])
                   .surface3D(width, height)
                   .transition().duration(500)
                   .surfaceHeight(function (d) {

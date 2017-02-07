@@ -47,27 +47,6 @@
             }
             return output;
         };
-        var transformPoint1=function(point){
-            var x=transformPrecalc[0]*point[0]+transformPrecalc[1]*point[1]+transformPrecalc[2]*point[2];
-            var y=transformPrecalc[3]*point[0]+transformPrecalc[4]*point[1]+transformPrecalc[5]*point[2];
-            var z=transformPrecalc[6]*point[0]+transformPrecalc[7]*point[1]+transformPrecalc[8]*point[2];
-            return [x,y+20,z];
-        };
-        var getTransformedData1=function(){
-            var data=node.datum();
-            if(!heightFunction) return [[]];
-            var t, output=[];
-            var heights=getHeights();
-            var xlength=data.length;
-            var ylength=data[0].length;
-            for(var x=0;x<xlength;x++){
-                output.push(t=[]);
-                for(var y=0;y<ylength;y++){
-                    t.push(transformPoint1([(x-xlength/2)/(xlength*1.41)*displayWidth*zoom, heights[x][y]*zoom, (y-ylength/2)/(ylength*1.41)*displayWidth*zoom]));
-                }
-            }
-            return output;
-        };
         var renderSurface=function(){
             var originalData=node.datum();
             var data=getTransformedData();
@@ -89,34 +68,6 @@
                     });
                 }
             }
-            /*d0.sort(function(a, b){return b.depth-a.depth});
-             var dr=node.selectAll('path').data(d0);
-             dr.enter().append("path");
-             if(trans){
-             dr=dr.transition().delay(trans.delay()).duration(trans.duration());
-             }
-             dr.attr("d",function(d){return d.path;});
-             if(colorFunction){
-             dr.attr("fill",function(d){return colorFunction(d.data)}).style("opacity",0.5);
-             }
-             trans=false;*/
-
-           /* var data1=getTransformedData1();
-            var xlength1=data1.length;
-            var ylength1=data1[0].length;
-            for( x=0;x<xlength1-1;x++){
-                for( y=0;y<ylength1-1;y++){
-                    depth=data1[x][y][2]+data1[x+1][y][2]+data1[x+1][y+1][2]+data1[x][y+1][2];
-                    d0.push({
-                        path:
-                        'M'+(data1[x][y][0]+displayWidth/2).toFixed(10)+','+(data1[x][y][1]+displayHeight/2).toFixed(10)+
-                        'L'+(data1[x+1][y][0]+displayWidth/2).toFixed(10)+','+(data1[x+1][y][1]+displayHeight/2).toFixed(10)+
-                        'L'+(data1[x+1][y+1][0]+displayWidth/2).toFixed(10)+','+(data1[x+1][y+1][1]+displayHeight/2).toFixed(10)+
-                        'L'+(data1[x][y+1][0]+displayWidth/2).toFixed(10)+','+(data1[x][y+1][1]+displayHeight/2).toFixed(10)+'Z',
-                        depth: depth, data: originalData[x][y]
-                    });
-                }
-            }*/
             d0.sort(function(a, b){return b.depth-a.depth});
             dr=node.selectAll('path').data(d0);
             dr.enter().append("path");
